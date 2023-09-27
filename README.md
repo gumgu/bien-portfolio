@@ -2,11 +2,8 @@
 BoardSimple은 간단한 CRUD 기능을 갖춘 게시판 포털 서비스입니다. 사용자(SPA)와 관리자(MPA) 2가지 버전으로 제작되었습니다.
 
 ## 📑 프로젝트 소개
-### 사용자 게시판
-Springboot와 Vue.js를 이용하여 RestfulAPI 기반 SPA 방식으로 제작되었습니다.
-
-### 관리자 게시판
-Springboot와 thymeleaf를 이용하여 MPA 방식으로 제작되었습니다.
+- 사용자 게시판: Springboot와 Vue.js를 이용하여 RestfulAPI 기반 SPA 방식으로 제작되었습니다.
+- 관리자 게시판: Springboot와 thymeleaf를 이용하여 MPA 방식으로 제작되었습니다.
 
 ## 🌐 플랫폼
 Web
