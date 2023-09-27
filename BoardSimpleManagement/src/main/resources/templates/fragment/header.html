@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .name-container {
+            margin-top: 30px;
+        }
+
+        .login-nav-container {
+            font-size: 15px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* 안내 문구 hover 기능 off */
+        .custom-nav:hover {
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+<div class="name-container">
+    <h1>BoardManagement</h1>
+</div>
+
+<div class="login-nav-container">
+    <div class="nav justify-content-end">
+        <nav th:if="${session.loginAdmin == null}" class="nav text-end">
+            <a class="nav-link" href="/admin/login">로그인</a>
+            <a class="nav-link" href="/admin/add">회원가입</a>
+        </nav>
+        <nav th:unless="${session.loginAdmin == null}" class="nav text-end">
+            <a class="nav-link custom-nav" th:text="${session.loginAdmin.name} + '님 안녕하세요!'"></a>
+            <a class="nav-link" href="/admin/logout">로그아웃</a>
+        </nav>
+    </div>
+</div>
+
+</body>
+</html>

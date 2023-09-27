@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.admin.file.repository.FileMapper">
+
+    <insert id="save"
+            parameterType="FileDTO"
+            useGeneratedKeys="true">
+        INSERT INTO file
+        (board_seq,
+         origin_name,
+         file_name,
+         date)
+        VALUES (#{boardSeq},
+                #{fileDTO.originName},
+                #{fileDTO.fileName},
+                now())
+    </insert>
+
+    <select id="findFileByBoardSeq"
+            resultType="FileDTO">
+        SELECT *
+        FROM file
+        WHERE board_seq = #{boardSeq}
+    </select>
+
+    <select id="findFileByFileSeq"
+            resultType="FileDTO">
+        SELECT *
+        FROM file
+        WHERE seq = #{fileSeq}
+    </select>
+
+    <delete id="deleteFileByFileName">
+        DELETE
+        FROM file
+        WHERE file_name = #{fileName}
+    </delete>
+
+    <delete id="deleteFileByBoardSeq">
+        DELETE
+        FROM file
+        WHERE board_seq = #{boardSeq}
+    </delete>
+
+</mapper>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <style>
+        .content {
+            margin-left: 350px;
+            padding: 20px;
+            max-width: 560px;
+
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="~{fragment/header}"></div>
+
+<div class="row">
+    <div class="sidebar">
+        <div th:replace="~{fragment/sidebar}"></div>
+    </div>
+
+    <div class="content" style="max-width: 600px;">
+        <div class="py-5 text-center">
+            <h2>홈 화면</h2>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" type="button"
+                        th:onclick="|location.href='@{/admin/add}'|">
+                    회원 가입
+                </button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-dark btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/admin/login}'|" type="button">
+                    로그인
+                </button>
+            </div>
+        </div>
+        <hr class="my-4">
+    </div>
+</div>
+
+
+</body>
+</html>

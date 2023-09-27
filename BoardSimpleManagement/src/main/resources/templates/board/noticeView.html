@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div th:replace="~{fragment/header}"></div>
+
+    <div class="row">
+        <h1>공지사항 관리</h1>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div th:replace="~{fragment/sidebar}"></div>
+        </div>
+
+        <div class="col-md-8" style="margin-top: 30px;">
+            <div class="row">
+                <div class="col-md-10">
+                    <h3>[<span th:text="${noticeBoardDTO.categoryName}"></span>] <span
+                            th:text="${noticeBoardDTO.subject}"></span></h3>
+                </div>
+                <div class="col-md-1">
+                    <label for="date">등록일시</label>
+                    <input type="text" id="date" name="date"
+                           th:value="${noticeBoardDTO.date}"
+                           readonly>
+                </div>
+                <div class="col-md-1">
+                    <label for="writer">작성자</label>
+                    <input type="text" id="writer" name="writer"
+                           th:value="${noticeBoardDTO.adminId}"
+                           readonly>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="text-right mb-4">
+                    조회수: [<span th:text="${noticeBoardDTO.readCount}"></span>]
+                </div>
+            </div>
+
+            <div class="row">
+                <input type="text" id="content" name="content"
+                       th:value="${noticeBoardDTO.content}"
+                        readonly>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='items.html'"
+                            type="button">목록
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-primary btn-lg"
+                            onclick="location.href='editForm.html'"
+                            type="button">수정
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-primary btn-lg"
+                            onclick="location.href='editForm.html'"
+                            type="button">삭제
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>

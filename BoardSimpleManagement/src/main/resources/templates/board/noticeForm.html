@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container-fluid {
+            max-width: 1000px;
+        }
+
+        /*************** 베너 디자인 *************/
+        .board-name-container {
+            margin: 24px;
+        }
+
+        /************ 작성 폼 내부 디자인 ***********/
+        textarea {
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="~{fragment/header}"></div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div th:replace="~{fragment/sidebar}"></div>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="board-name-container">
+                <h3>공지사항 게시판 관리</h3>
+            </div>
+
+            <form action th:object="${noticeBoardDTO}" th:action method="post">
+                <table class="table">
+                    <tbody>
+                    <div th:if="${#fields.hasGlobalErrors()}">
+                        <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                           th:text="${err}">글로벌 오류 메시지</p>
+                    </div>
+                    <tr>
+                        <td class="bg-gray">카테고리</td>
+                        <td>
+                            <select name="categoryName" th:field="*{categoryId}" class="form-control">
+                                <option value="general">공지</option>
+                                <option value="urgent">급공지</option>
+                            </select>
+                            <div class="field-error" th:errors="*{categoryId}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray">제목</td>
+                        <td><input type="text" name="subject" th:field="*{subject}" class="form-control">
+                            <div class="field-error" th:errors="*{subject}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray">내용</td>
+                        <td><textarea name="content" th:field="*{content}" class="form-control"></textarea>
+                            <div class="field-error" th:errors="*{content}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray">알림글</td>
+                        <td><input type="checkbox" name="alert" th:field="*{alert}">
+                            <div class="field-error" th:errors="*{alert}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <input type="submit"
+                       class="btn btn-primary pull-right"
+                       th:onclick="|location.href='@{/admin/notice/{seq}(seq=${noticeBoardDTO.seq})}'|"
+                       value="등록/수정">
+                <button
+                        type="button"
+                        class="btn btn-primary pull-right"
+                        th:onclick="|location.href='@{/admin/notices}'|">목록</button>
+                <button type="button"
+                        th:if="${noticeBoardDTO.seq != 0}"
+                        th:onclick="|location.href='@{/admin/notice/delete/{seq}(seq=${noticeBoardDTO.seq})}'|"
+                        class="btn btn-primary pull-right">삭제</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "2.7.16"
+	id("org.springframework.boot") version "2.7.14"
 	id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
@@ -28,6 +28,19 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	// 마이바티스
+	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1")
+
+	// 테스트 마이바티스
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1")
+
+	// 검증
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+
+	// mysql
+	implementation("mysql:mysql-connector-java:8.0.28")
 }
 
 tasks.withType<Test> {

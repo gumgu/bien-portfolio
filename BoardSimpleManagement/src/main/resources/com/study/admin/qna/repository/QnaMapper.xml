@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.admin.qna.repository.QnaMapper">
+
+    <select id="findQnaList"
+            parameterType="BoardSearchCondition"
+            resultType="QnaDTO">
+        SELECT
+            seq,
+            question_subject,
+            member_id,
+            read_count,
+            date,
+            IF(answer IS NOT NULL, TRUE, FALSE) has_Answer,
+            privacy
+        FROM qna
+        <include refid="boardSearchConditionQuery"/>
+        <include refid="boardSearchConditionOrderQuery"></include>
+        LIMIT #{startRow}, #{boardSearchCondition.pageSize}
+    </select>
+
+    <select id = "findQnaListCount"
+            parameterType = "BoardSearchCondition">
+        SELECT COUNT(*)
+        FROM qna
+        <include refid="boardSearchConditionQuery"/>
+    </select>
+
+    <!--검색 조건-->
+    <sql id="boardSearchConditionQuery">
+        <where>
+            <if test="(boardSearchCondition.myId != null) &amp;&amp; (boardSearchCondition.myId != '')">
+                AND admin_id = #{boardSearchCondition.myId}
+            </if>
+            <if test="(boardSearchCondition.fromDate != null) &amp;&amp; (boardSearchCondition.toDate != null)">
+                AND date BETWEEN #{boardSearchCondition.fromDate} AND #{boardSearchCondition.toDate}
+            </if>
+            <if test="boardSearchCondition.search != null">
+                AND
+                (question_subject LIKE CONCAT('%', #{boardSearchCondition.search}, '%')
+                OR
+                question_content LIKE CONCAT('%', #{boardSearchCondition.search}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <!--정렬 조건-->
+    <sql id="boardSearchConditionOrderQuery">
+        ORDER BY
+        <choose>
+            <when test="boardSearchCondition.orderStandard == 'date'">date</when>
+            <when test="boardSearchCondition.orderStandard == 'search'">question_subject</when>
+            <when test="boardSearchCondition.orderStandard == 'readCount'">read_count</when>
+            <otherwise>date</otherwise>
+        </choose>
+        <choose>
+            <when test="boardSearchCondition.orderSequence == 0">
+                DESC
+            </when>
+            <otherwise>
+                ASC
+            </otherwise>
+        </choose>
+    </sql>
+
+
+    <select id="findQnaBySeq" resultType="QnaDTO">
+        SELECT *
+        FROM qna
+        WHERE seq = #{seq};
+    </select>
+
+    <update id="saveQnaAnswer" parameterType="QnaDTO">
+        UPDATE qna
+        SET admin_id = #{adminId},
+            answer   = #{answer}
+        WHERE seq = #{seq}
+    </update>
+
+    <delete id="deleteQna">
+        DELETE
+        FROM qna
+        WHERE seq = #{seq}
+    </delete>
+</mapper>

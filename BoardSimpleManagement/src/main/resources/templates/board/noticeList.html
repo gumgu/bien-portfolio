@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container-fluid {
+            max-width: 1000px;
+        }
+
+        /*************** 베너 디자인 *************/
+        .board-name-container {
+            margin: 24px;
+        }
+
+        /************* 검색 조건 css ***************/
+        .search-container {
+            border: 1px solid lightgray;
+            font-size: 14px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: center; /* 가로 중앙 정렬 */
+            text-align: center; /* 가로 중앙 정렬 (필요한 경우) */
+            margin: 8px 0;
+        }
+
+        .search-button {
+            margin: 0 5px;
+        }
+
+        .form {
+            padding: 0;
+        }
+
+        /* 날짜 입력 필드 스타일 조절 */
+        .search-box input[type="date"] {
+            width: 120px;
+            height: 22px;
+            max-width: 100%;
+            padding: 5px;
+        }
+
+        span {
+            margin: 0 10px;
+        }
+
+        select {
+            margin: 0 5px;
+        }
+
+        /************** 글쓰기 버튼 ****************/
+        .write-button-box {
+            display: flex;
+            justify-content: end;
+            margin: 20px 0;
+        }
+
+        /************* 페이징 **************/
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-btn {
+            margin: 0 5px;
+        }
+
+        /************ 테이블 ***************/
+        table {
+            font-size: 13px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        td.subject {
+            text-align: left;
+            width: 380px;
+        }
+
+        th {
+            background-color: #eeeeee;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="~{fragment/header}"></div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div th:replace="~{fragment/sidebar}"></div>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="board-name-container">
+                <h3>공지사항 게시판 관리</h3>
+            </div>
+
+            <div class="row">
+                <form th:object="${boardSearch}" method="get" class="form">
+                    <div class="search-container">
+                        <div class="row">
+                            <div class="search-box col-md-6">
+                                <span>등록일시</span>
+                                <input type="date" th:field="*{fromDate}" class="">
+                                <span> ~ </span>
+                                <input type="date" th:field="*{toDate}"/>
+                            </div>
+                            <div class="search-box col-md-2">
+                                <select th:field="*{categoryId}">
+                                    <option value="">전체 카테고리</option>
+                                    <option value="general">공지</option>
+                                    <option value="urgent">급공지</option>
+                                </select>
+                            </div>
+                            <div class="search-box col-md-4">
+                                <input type="text" th:field="*{search}" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-sm btn-secondary search-button" type="submit">검색</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="search-box col-md-3 ">
+                                <select th:field="*{pageSize}" th:onchange="this.form.submit()">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                </select><span>개씩 보기</span>
+                            </div>
+                            <div class="search-box col-md-4"></div>
+
+                            <div class="search-box col-md-5 ">
+                                <span>정렬</span>
+
+                                <div class="text-end">
+                                    <select th:field="*{orderStandard}" th:onchange="this.form.submit()">
+                                        <option value="date">등록일시</option>
+                                        <option value="categoryName">분류</option>
+                                        <option value="subject">제목</option>
+                                        <option value="readCount">조회수</option>
+                                    </select>
+                                </div>
+
+                                <div class="text-end">
+                                    <select th:field="*{orderSequence}" th:onchange="this.form.submit()">
+                                        <option value="0">내림차순</option>
+                                        <option value="1">오름차순</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="write-button-box">
+                <button
+                        type="button"
+                        class="btn btn-sm btn-primary pull-right justify-content-end"
+                        th:onclick="|location.href='@{/admin/notice}'|">글등록
+                </button>
+            </div>
+
+            <div class="row">
+                <table class="table" style="text-align: center; border:1px solid #dddddd">
+                    <thead>
+                    <tr>
+                        <th style="background-color: #eeeeee; text-align: center;">번호</th>
+                        <th style="background-color: #eeeeee; text-align: center;">분류</th>
+                        <th style="background-color: #eeeeee; text-align: center;">제목</th>
+                        <th style="background-color: #eeeeee; text-align: center;">조회</th>
+                        <th style="background-color: #eeeeee; text-align: center;">등록일시</th>
+                        <th style="background-color: #eeeeee; text-align: center;">등록자</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="notice : ${alertList}" class="table-primary"
+                        th:onclick="|location.href='@{/admin/notice/{seq}(seq=${notice.seq})}'|">
+                        <td th:text="${notice.seq}"></td>
+                        <td th:text="${notice.categoryName}"></td>
+                        <td class="subject">
+                            <a th:text="${notice.subject}"/>
+                        </td>
+                        <td th:text="${notice.readCount}"></td>
+                        <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${notice.adminId}"></td>
+                    </tr>
+                    <tr th:each="notice : ${noticeList}"
+                        th:onclick="|location.href='@{/admin/notice/{seq}(seq=${notice.seq})}'|">
+                        <td th:text="${notice.seq}"></td>
+                        <td th:text="${notice.categoryName}"></td>
+                        <td  class="subject">
+                            <a th:text="${notice.subject}"/>
+                        </td>
+                        <td th:text="${notice.readCount}"></td>
+                        <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${notice.adminId}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="pagination"
+                     th:with="maxPage=${(totalListCount + boardSearch.pageSize -1 )/ boardSearch.pageSize},
+                                 startPage=${( (boardSearch.currentPage / boardSearch.pageSize) * boardSearch.pageSize + 1 ) < 1 ?
+                                                ((boardSearch.currentPage / boardSearch.pageSize) * boardSearch.pageSize + 1) : 1},
+                                 endPage=${(startPage + boardSearch.pageSize - 1) > maxPage ? maxPage : (startPage + boardSearch.pageSize - 1)}">
+                    <button class="page-btn btn btn-sm btn-primary" th:if="${boardSearch.currentPage > 1}"
+                            th:text="이전"
+                            th:onclick="|location.href=
+                                '@{/admin/frees(fromDate=${boardSearch.fromDate},toDate=${boardSearch.toDate},searcn=${boardSearch.search},categoryId=${boardSearch.categoryId},pageSize=${boardSearch.pageSize},currentPage=${boardSearch.currentPage - 1})}'|"/>
+                    </button>
+
+                    <div th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <div th:if="${page == boardSearch.currentPage}">
+                            <button type="button" class="page-btn btn-sm btn btn-light" th:text="${page}"></button>
+                        </div>
+                        <div th:unless="${page == boardSearch.currentPage}">
+                            <button type="button" class="page-btn btn-sm btn btn-light" th:text="${page}"
+                                    th:onclick="|location.href=
+                                        '@{/admin/frees(fromDate=${boardSearch.fromDate},toDate=${boardSearch.toDate},searcn=${boardSearch.search},categoryId=${boardSearch.categoryId},pageSize=${boardSearch.pageSize},currentPage=${page})}'|"/>
+
+                        </div>
+                    </div>
+
+                    <button class="page-btn btn btn-sm btn-primary btn-lg" th:if="${boardSearch.currentPage != maxPage}"
+                            th:text="다음"
+                            th:onclick="|location.href=
+                                '@{/admin/frees(fromDate=${boardSearch.fromDate},toDate=${boardSearch.toDate},searcn=${boardSearch.search},categoryId=${boardSearch.categoryId},pageSize=${boardSearch.pageSize},currentPage=${boardSearch.currentPage + 1})}'|"/>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

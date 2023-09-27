@@ -1,4 +1,4 @@
-package com.study.BoardSimpleManagement;
+package com.study.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

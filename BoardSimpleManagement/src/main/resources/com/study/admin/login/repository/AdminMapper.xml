@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.admin.login.repository.AdminMapper">
+
+<!-- 관리자(Admin) 정보를 생성합니다.-->
+    <insert id="saveAdmin"
+            parameterType="AdminDTO"
+            keyProperty="adminId">
+        INSERT INTO admin
+            (id,
+             password,
+             name)
+        VALUES
+            (#{id},
+             SHA2(#{password}, 256),
+             #{name})
+    </insert>
+
+<!-- 관리자(Admin) 정보를 조회합니다-->
+    <select id="findAdminByAdminId"
+            resultType="AdminDTO">
+        SELECT id,
+               name,
+               date
+        FROM admin
+        WHERE id = #{id}
+    </select>
+
+</mapper>

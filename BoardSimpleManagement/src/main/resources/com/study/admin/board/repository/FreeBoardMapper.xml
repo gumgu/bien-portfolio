@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.admin.board.repository.FreeBoardMapper">
+
+    <select id="findBoardList"
+            parameterType="BoardSearchCondition"
+            resultType="FreeBoardDTO">
+        SELECT DISTINCT
+            b.seq,
+            c.category_name,
+            b.subject,
+            b.content,
+            b.member_id,
+            b.admin_id,
+            b.read_count,
+            b.date,
+            IF(f.seq, true, false) AS has_file,
+            (SELECT COUNT(*) FROM reply r WHERE r.board_seq = b.seq) AS reply_count
+        FROM board b
+            INNER JOIN category c
+                ON b.category_id = c.id
+            LEFT JOIN file f
+                ON b.seq = f.board_seq
+            LEFT JOIN reply r
+                ON b.seq = r.board_seq
+        <include refid="boardSearchConditionQuery"/>
+        <include refid="boardSearchConditionOrderQuery"/>
+        LIMIT #{startRow}, #{boardSearchCondition.pageSize}
+    </select>
+
+    <select id = "findBoardCount"
+            parameterType = "BoardSearchCondition">
+        SELECT COUNT(*)
+        FROM board b
+            INNER JOIN category c
+                ON b.category_id = c.id
+        <include refid="boardSearchConditionQuery"/>
+        <include refid="boardSearchConditionOrderQuery"/>
+    </select>
+
+    <update id="updateReadCount">
+        UPDATE board
+        SET read_count = read_count +1
+        WHERE seq = #{seq}
+    </update>
+
+    <!--검색 조건-->
+    <sql id="boardSearchConditionQuery">
+        <where>
+            <if test="(boardSearchCondition.type != null) &amp;&amp; boardSearchCondition.type !=''">
+                AND c.type = #{boardSearchCondition.type}
+            </if>
+            <if test="(boardSearchCondition.fromDate != null) &amp;&amp; (boardSearchCondition.toDate != null)">
+                AND b.date BETWEEN #{boardSearchCondition.fromDate} AND #{boardSearchCondition.toDate}
+            </if>
+            <if test="boardSearchCondition.categoryId != null &amp;&amp; boardSearchCondition.categoryId !=''">
+                AND b.category_id = #{boardSearchCondition.categoryId}
+            </if>
+            <if test="boardSearchCondition.search != null">
+                AND
+                (b.subject LIKE CONCAT('%', #{boardSearchCondition.search}, '%')
+                OR
+                b.content LIKE CONCAT('%', #{boardSearchCondition.search}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <!--정렬 조건-->
+    <sql id="boardSearchConditionOrderQuery">
+        ORDER BY
+        <choose>
+            <when test="boardSearchCondition.orderStandard == 'date'">b.date</when>
+            <when test="boardSearchCondition.orderStandard == 'categoryName'">c.category_name</when>
+            <when test="boardSearchCondition.orderStandard == 'search'">b.subject</when>
+            <when test="boardSearchCondition.orderStandard == 'readCount'">b.read_count</when>
+            <otherwise>b.date</otherwise>
+        </choose>
+        <choose>
+            <when test="boardSearchCondition.orderSequence == 0">
+                DESC
+            </when>
+            <otherwise>
+                ASC
+            </otherwise>
+        </choose>
+    </sql>
+
+    <insert id="saveBoard"
+            useGeneratedKeys="true"
+            keyProperty="seq">
+        INSERT INTO board
+        (admin_id,
+         category_id,
+         subject,
+         content)
+        VALUES (#{adminId},
+                #{categoryId},
+                #{subject},
+                #{content})
+    </insert>
+
+    <select id="findBoardBySeq" resultType="FreeBoardDTO">
+        SELECT
+            b.seq,
+            c.category_name,
+            b.category_id,
+            b.subject,
+            b.member_id,
+            b.admin_id,
+            b.read_count,
+            b.date,
+            b.content
+        FROM board b
+                 INNER JOIN category c
+                            ON b.category_id = c.id
+        WHERE seq = #{seq};
+    </select>
+
+    <update id="modifyBoard" parameterType="FreeBoardDTO">
+        UPDATE board
+        SET admin_id   = #{adminId},
+            category_id = #{categoryId},
+            subject     = #{subject},
+            content     = #{content},
+            update_date = now()
+        WHERE seq = #{seq}
+    </update>
+
+    <delete id="deleteBoard">
+        DELETE
+        FROM board
+        WHERE seq = #{seq}
+    </delete>
+
+    <select id="getCategoryList">
+        SELECT *
+        FROM category
+        WHERE type=#{type};
+    </select>
+
+</mapper>

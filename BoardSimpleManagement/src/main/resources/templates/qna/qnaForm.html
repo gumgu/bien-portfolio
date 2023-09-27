@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .board-name-container {
+            margin-bottom: 45px;
+        }
+
+        textarea {
+            height: 200px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div th:replace="~{fragment/header}"></div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div th:replace="~{fragment/sidebar}"></div>
+        </div>
+
+        <div class="col-md-9" style="margin-top: 30px;">
+
+            <div class="board-name-container">
+                <h1>문의 게시판</h1>
+            </div>
+
+            <form action th:object="${qnaDTO}" th:action method="post">
+                <table class="table">
+                    <tbody>
+                    <div th:if="${#fields.hasGlobalErrors()}">
+                        <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                           th:text="${err}">글로벌 오류 메시지</p>
+                    </div>
+                    <tr>
+                        <td class="bg-gray">제목</td>
+                        <td><input type="text" name="question_subject" readonly
+                                   th:field="*{questionSubject}"
+                                   class="form-control">
+                            <div class="field-error" th:errors="*{questionSubject}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray">내용</td>
+                        <td><textarea name="question_content" readonly
+                                      th:field="*{questionContent}"
+                                      class="form-control"></textarea>
+                            <div class="field-error" th:errors="*{questionContent}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-gray">답변</td>
+                        <td><textarea name="answer" th:field="*{answer}"
+                                      class="form-control"></textarea>
+                            <div class="field-error" th:errors="*{answer}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <input type="submit"
+                       class="btn btn-primary pull-right"
+                       th:onclick="|location.href='@{/admin/qna/{seq}(seq=${qnaDTO.seq})}'|"
+                       value="답변완료">
+                <button type="button"
+                        class="btn btn-primary pull-right"
+                        th:onclick="|location.href='@{/admin/qnas}'|">목록
+                </button>
+                <button type="button"
+                        class="btn btn-primary pull-right"
+                        th:onclick="|location.href='@{/admin/qna/{seq}/delete(seq=${qnaDTO.seq})}'|">삭제
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

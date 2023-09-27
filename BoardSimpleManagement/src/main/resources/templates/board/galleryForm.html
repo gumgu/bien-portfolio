@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        const add_file_box = () => {
+            const box = document.getElementById("attachFileDiv");
+            const newDiv = document.createElement('div');
+            newDiv.innerHTML = "<input type='file' name='addFiles'>\n<button type='button' class='btn btn-outline-dark' onclick='delete_file_box(this)'>X</button>"
+            box.appendChild(newDiv);
+        }
+        const delete_file_box = (obj) => {
+            document.getElementById('attachFileDiv').removeChild(obj.parentNode);
+        }
+    </script>
+    <style>
+        .container-fluid {
+            max-width: 1000px;
+        }
+
+        /*************** 베너 디자인 *************/
+        .board-name-container {
+            margin: 24px;
+        }
+
+        /************ 작성 폼 내부 디자인 ***********/
+        textarea {
+            height: 200px;
+        }
+
+        /* 첨부파일 */
+        .file-box {
+            margin: 5px;
+        }
+
+        .delete-btn {
+            width: 57px;
+            font-size: 15px;
+        }
+
+        /* 검증 에러 표현 */
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+
+    <div th:replace="~{fragment/header}"></div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div th:replace="~{fragment/sidebar}"></div>
+        </div>
+
+        <div class="col-md-9" >
+
+            <div class="board-name-container">
+                <h3>갤러리 게시판 관리</h3>
+            </div>
+
+            <form action th:object="${galleryBoardDTO}" th:action method="post" enctype="multipart/form-data">
+                <table class="table">
+                    <tbody>
+                    <div th:if="${#fields.hasGlobalErrors()}">
+                        <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                           th:text="${err}">글로벌 오류 메시지</p>
+                    </div>
+                    <tr>
+                        <th class="bg-gray">분류</th>
+                        <td>
+                            <select name="categoryName" th:field="*{categoryId}" class="form-control">
+                                <option value="celebrity">연예인</option>
+                                <option value="memorial">기념</option>
+                                <option value="place">장소</option>
+                            </select>
+                            <div class="field-error" th:errors="*{categoryId}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-gray">제목</th>
+                        <td><input type="text" name="subject" th:field="*{subject}" class="form-control">
+                            <div class="field-error" th:errors="*{subject}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-gray">내용</th>
+                        <td><textarea name="content" th:field="*{content}" class="content-form form-control"></textarea>
+                            <div class="field-error" th:errors="*{content}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="bg-gray">첨부파일</th>
+                        <td>
+                            <div class="file-container" th:if="${fileList}">
+                                <div class="file-box row" th:each="file : ${fileList}">
+                                    <span class="col-md-1">📁</span>
+                                    ︎ <div class="attachment-box col-md-9" th:text="${file.originName}"></div>
+                                    <button type="button" class="delete-btn btn btn-outline-dark col-md-1" th:text="삭제"></button>
+                                </div>
+                            </div>
+                            <div id="attachFileDiv">
+                                <input type="file" name="addFiles">
+                            </div>
+                            <input type="button" value="추가" onclick="add_file_box()">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <input type="submit"
+                       class="btn btn-primary pull-right"
+                       th:if="${galleryBoardDTO.seq == 0}"
+                       th:onclick="|location.href='@{/admin/gallery}'|"
+                       value="등록">
+                <input type="submit"
+                       class="btn btn-primary pull-right"
+                       th:unless="${galleryBoardDTO.seq == 0}"
+                       th:onclick="|location.href='@{/admin/gallery/{seq}(seq=${galleryBoardDTO.seq})}'|"
+                       value="수정">
+                <button
+                        type="button"
+                        class="btn btn-primary pull-right"
+                        th:onclick="|location.href='@{/admin/galleries}'|">목록
+                </button>
+                <button type="button"
+                        th:if="${galleryBoardDTO.seq != 0}"
+                        th:onclick="|location.href='@{/admin/gallery/delete/{seq}(seq=${galleryBoardDTO.seq})}'|"
+                        class="btn btn-primary pull-right">삭제
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
