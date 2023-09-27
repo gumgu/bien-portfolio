@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.member.repository.MemberMapper">
+
+    <!--아이디, 비밀번호가 일치하는 사용자(Member) 정보를 조회합니다. -->
+    <select id="findMember"
+            resultType="com.study.member.dto.MemberDTO">
+        SELECT id,
+               name,
+               date
+        FROM member
+        WHERE id = #{memberId}
+          AND password = #{password};
+    </select>
+
+    <!--아이디와 일치하는 사용자(Member) 정보를 조회합니다-->
+    <select id="findMemberById"
+            resultType="com.study.member.dto.MemberDTO">
+        SELECT id,
+               name,
+               date
+        FROM member
+        WHERE id = #{loginId}
+    </select>
+
+<!-- 사용자 정보를 등록합니다. -->
+    <insert id="saveMember"
+            parameterType="com.study.member.dto.MemberDTO"
+            keyProperty="memberId">
+        INSERT INTO member
+        (id,
+         password,
+         name)
+        VALUES
+            (#{id},
+             #{password},
+             #{name})
+    </insert>
+
+</mapper>
