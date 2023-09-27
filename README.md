@@ -8,6 +8,9 @@ Springboot와 Vue.js를 이용하여 RestfulAPI 기반 SPA 방식으로 제작�
 ### 관리자 게시판
 Springboot와 thymeleaf를 이용하여 MPA 방식으로 제작되었습니다.
 
+## 🌐 플랫폼
+Web
+
 ## 🧑‍💻 개발 인원
 1명 **(개인 프로젝트)**
 
@@ -18,15 +21,12 @@ Springboot와 thymeleaf를 이용하여 MPA 방식으로 제작되었습니다.
 - Frontend: Vue.js, Thymeleaf 
 - Bacend: Spring Framework(2.7.4)
 - DB: MyBatis(2.3.10), MySQL(8.0)
-- Infra:IntelliJ IDEA(2023), Docker 
+- Infra:IntelliJ IDEA(2023), Docker
 
 ## 🏠 메인 화면
 | 사용자 게시판 | 관리자 게시판 |
 |---------|---------|
 |![image](https://github.com/gumgu/Spring-Vue-Board/assets/87007010/28495501-7239-41b4-b31b-b053f1fd22de)|![image](https://github.com/gumgu/Spring-Vue-Board/assets/87007010/0b6ee6c2-f597-4a68-864b-e9555450b430)|
-
-## 🌐 플랫폼
-Web
 
 ## 💾 ERD
 ![adminBoard (7)](https://github.com/gumgu/Spring-Vue-Board/assets/87007010/8b9d5aa2-dc19-4f4d-9761-fa5c6cb09679)
