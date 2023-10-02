@@ -15,10 +15,10 @@ Web
 2023.07.01 ~ 2023.08.29 (2개월)
 
 ## ⚙️ 개발 환경
+- Bacend: : Java(JDK 1.8), SpringBoot(2.7.4)
 - Frontend: Vue.js, Thymeleaf 
-- Bacend: Spring Framework(2.7.4)
 - DB: MyBatis(2.3.10), MySQL(8.0)
-- Infra:IntelliJ IDEA(2023), Docker
+- DevOps: IntelliJ IDEA(2023), Docker, Amazon EC2
 
 ## 🏠 메인 화면
 | 사용자 게시판 | 관리자 게시판 |
