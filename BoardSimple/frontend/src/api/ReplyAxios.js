@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./axios";
 import router from "@/router";
 
 const serverUrl = 'http://localhost:8080/'

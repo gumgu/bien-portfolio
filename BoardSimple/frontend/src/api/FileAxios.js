@@ -1,5 +1,4 @@
-import axios from "axios";
-import store from "@/store";
+import axios from "./axios";
 
 const serverUrl = 'http://localhost:8080/'
 
