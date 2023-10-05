@@ -13,7 +13,7 @@
           <div class="search-box">
             <div class="search-group">
               <span>등록일시</span>
-              <input type="date" class="form-control" v-model="boardSearchCondition.fromData">
+              <input type="date" class="form-control" v-model="boardSearchCondition.fromDate">
               <span>~</span>
               <input type="date" class="form-control" v-model="boardSearchCondition.toDate">
             </div>
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       boardSearchCondition: { // 검색, 정렬 변수
-        fromData: undefined,
+        fromDate: undefined,
         toDate: undefined,
         search: undefined,
         categoryId: '',
@@ -109,7 +109,6 @@ export default {
         myQnaOnly: undefined,
 
         // 페이징 변수
-        // currentPage: this.parentCurrentPage,
         pageSize: 10,
       }
     }
