@@ -14,22 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class HomeController {
 
-    public AdminService adminService;
-
     @GetMapping("/")
     public String homeLogin(@Login AdminDTO loginAdmin, Model model) {
 
         // 세션에 회원 데이터가 없으면 home으로 이동
         if (loginAdmin == null) {
-            return "home";
+            return "redirect:/admin/login";
         }
 
         // 세션이 유지되면 loginHome으로 이동
         model.addAttribute("admin", loginAdmin);
-        return "loginHome";
+        return "redirect:/admin/notices";
     }
-
-
-
-
 }
