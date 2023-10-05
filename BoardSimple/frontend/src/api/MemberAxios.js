@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios from "./axios";
 import router from "@/router";
-import store from "@/store";
 
 const serverUrl = 'http://localhost:8080/'
 
@@ -71,6 +70,6 @@ export const checkPassword = (memberDTO) => {
                 result: result
             }
         }).catch((error) => {
-            return Promise.reject();
+            return Promise.reject(error);
         })
 }

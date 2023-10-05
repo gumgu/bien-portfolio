@@ -54,18 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 "GET".equalsIgnoreCase(httpRequest.getMethod())) {
             log.info("요청 메서드 = {}", httpRequest.getMethod());
 
-//            chain.doFilter(request, response);
-
-            // 임시 로그 등록
-            try {
-                log.info("REQUEST  [{}][{}][{}]", request.getDispatcherType(), requestURI);
-                chain.doFilter(request, response);
-            } catch (Exception e) {
-                throw e;
-            } finally {
-                log.info("RESPONSE [{}][{}][{}]", request.getDispatcherType(), requestURI);
-            }
-
+            chain.doFilter(request, response);
             return;
         }
 

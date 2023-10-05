@@ -1,7 +1,6 @@
 import {createStore} from "vuex";
 
 import axios from "axios";
-import router from "@/router";
 
 const serverUrl = 'http://localhost:8080/';
 const store = createStore({
@@ -96,7 +95,7 @@ const store = createStore({
                 });
             })
         },
-        async sendRefresh({commit}) {
+        async sendRefresh() {
 
             const refreshToken = store.getters.refreshToken;
             const id = store.getters.id;
