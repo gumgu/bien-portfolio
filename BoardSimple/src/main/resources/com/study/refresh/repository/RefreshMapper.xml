@@ -17,9 +17,9 @@
     </update>
 
     <delete id="delete">
-        DELETE
-        FROM refresh
-        WHERE member_id = #{memberId}
+        UPDATE refresh
+        SET password = NULL
+        WHERE member_id = #{memberId};
     </delete>
 
     <select id="findByMemberId">
