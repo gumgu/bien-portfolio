@@ -31,10 +31,14 @@
         <td>{{ dateTime(board.date, 'YYYY-MM-DD') }}</td>
         <td v-if="board.adminId">{{ board.adminId }}</td>
         <td v-else-if="board.memberId">{{ board.memberId }}</td>
-        <td v-else-if="board.memberId && board.adminId">{{ board.memberId }}</td>
+        <td v-else>{{ board.memberId }}</td>
       </tr>
       </tbody>
     </table>
+
+    <div class="non-data" v-if="boardList.length === 0">
+      <span>조회된 데이터가 없습니다.</span>
+    </div>
   </div>
 </template>
 
@@ -62,4 +66,14 @@ th.subject {
   text-align: center;
   width: 700px;
 }
+
+.non-data {
+  text-align: center;
+  margin: 70px 0;
+}
+
+.non-data span {
+  font-size: 1.5rem; /* h4 크기로 조절 */
+}
+
 </style>

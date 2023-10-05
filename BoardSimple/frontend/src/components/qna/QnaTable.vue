@@ -24,6 +24,10 @@
       </tr>
       </tbody>
     </table>
+
+    <div class="non-data" v-if="qnaList.length === 0">
+      <span>조회된 데이터가 없습니다.</span>
+    </div>
   </div>
 </template>
 
@@ -67,5 +71,14 @@ export default {
 th.subject {
   text-align: center;
   width: 700px;
+}
+
+.non-data {
+  text-align: center;
+  margin: 70px 0;
+}
+
+.non-data span {
+  font-size: 1.5rem; /* h4 크기로 조절 */
 }
 </style>
