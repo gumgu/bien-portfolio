@@ -119,22 +119,22 @@ public class FreeBoardController {
      * @return 자유게시글 리스트
      */
     @GetMapping("/frees")
-    public APIResult getFrees(@ModelAttribute("boardSearchCondition") BoardSearchCondition boardSearch) {
+    public APIResult getFrees(@ModelAttribute("boardSearchCondition") BoardSearchCondition boardSearchCondition) {
 
         log.info("FreeController getFress 호출됨");
-        log.info("FreeController boardSearch = {}", boardSearch);
+        log.info("FreeController boardSearch = {}", boardSearchCondition);
 
         // 게시판의 종류를 지정합니다.
-        boardSearch.setType("F");
+        boardSearchCondition.setType("F");
 
         // 게시판의 카테고리를 조회합니다.
         List<Category> categoryList = freeBoardService.getCategoryList("F");
 
         // 검색 조건에 맞는 게시글을 조회합니다.
-        List<Board> boardList = freeBoardService.findFreeBoardList(boardSearch);
+        List<Board> boardList = freeBoardService.findFreeBoardList(boardSearchCondition);
 
         // 검색 조건에 맞는 게시글 수를 조회합니다.
-        int totalListCount = freeBoardService.findFreeBoardListCount(boardSearch);
+        int totalListCount = freeBoardService.findFreeBoardListCount(boardSearchCondition);
 
         APIResult apiResult = new APIResult();
         apiResult.setState(State.SUCCESS);
