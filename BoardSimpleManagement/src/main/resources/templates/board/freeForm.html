@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script>
         const add_file_box = () => {
             const box = document.getElementById("attachFileDiv");
@@ -14,6 +16,25 @@
         const delete_file_box = (obj) => {
             document.getElementById('attachFileDiv').removeChild(obj.parentNode);
         }
+
+        function deleteComment(seq) {
+            if (confirm('댓글을 삭제하시겠습니까?')) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/api/reply/' + seq,
+                    success: function (data) {
+                        // 성공적으로 삭제된 경우, 화면에서 댓글을 제거합니다.
+                        alert('댓글 삭제에 성공했습니다.');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        // 삭제 중 오류가 발생한 경우, 오류 메시지를 표시합니다.
+                        alert('댓글 삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        }
+
     </script>
     <style>
         .container-fluid {
@@ -85,7 +106,8 @@
                     <tr>
                         <th class="bg-gray">분류</th>
                         <td>
-                            <select name="categoryId" th:field="*{categoryId}" th:errorclass="field-error" class="form-control">
+                            <select name="categoryId" th:field="*{categoryId}" th:errorclass="field-error"
+                                    class="form-control">
                                 <option value="hobby">취미</option>
                                 <option value="humor">유머</option>
                                 <option value="touching">감동</option>
@@ -95,13 +117,15 @@
                     </tr>
                     <tr>
                         <th class="bg-gray">제목</th>
-                        <td><input type="text" name="subject" th:field="*{subject}" th:errorclass="field-error" class="form-control">
+                        <td><input type="text" name="subject" th:field="*{subject}" th:errorclass="field-error"
+                                   class="form-control">
                             <div class="field-error" th:errors="*{subject}" th:errorclass="field-error"/>
                         </td>
                     </tr>
                     <tr>
                         <th class="bg-gray">내용</th>
-                        <td><textarea name="content" th:field="*{content}" th:errorclass="field-error" class="content-form form-control"></textarea>
+                        <td><textarea name="content" th:field="*{content}" th:errorclass="field-error"
+                                      class="content-form form-control"></textarea>
                             <div class="field-error" th:errors="*{content}"/>
                         </td>
                     </tr>
@@ -111,8 +135,10 @@
                             <div class="file-container" th:if="${fileList}">
                                 <div class="file-box row" th:each="file : ${fileList}">
                                     <span class="col-md-1">📁</span>
-                                    ︎ <div class="attachment-box col-md-9" th:text="${file.originName}"></div>
-                                    <button type="button" class="delete-btn btn btn-outline-dark col-md-1" th:text="삭제"></button>
+                                    ︎
+                                    <div class="attachment-box col-md-9" th:text="${file.originName}"></div>
+                                    <button type="button" class="delete-btn btn btn-outline-dark col-md-1"
+                                            th:text="삭제"></button>
                                 </div>
                             </div>
                             <div id="attachFileDiv">
@@ -136,14 +162,16 @@
                             <div class="reply-label">
                                 <span th:if="${reply.memberId}" th:text="${reply.memberId}"></span>
                                 <span th:unless="${reply.adminId}" th:text="${reply.adminId}"></span>
-                                <span th:text="${reply.date}"></span>
+                                <span th:text="${#temporals.format(reply.date, 'yyyy-MM-dd HH:mm')}"></span>
                             </div>
                             <div class="reply-content">
                                 <span th:text="${reply.content}"></span>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="button" class="btn btn-outline-dark">삭제</button>
+                            <button type="button" class="btn btn-outline-dark"
+                                    th:onclick="|deleteComment(${reply.seq})|">삭제
+                            </button>
                         </div>
                     </div>
                 </div>
