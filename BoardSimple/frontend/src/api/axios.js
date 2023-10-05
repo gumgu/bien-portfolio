@@ -88,6 +88,11 @@ axios.interceptors.response.use(
 
         }
 
+        // 로그인 오류의 경우 error 객체를 반환합니다.
+        else if (error.response.data.result.errorDTO.status === 405) {
+            return Promise.reject(error);
+        }
+
         // 그 외 에러는 ErrorPage를 보여줍니다.
         else {
             console.log('그 외 error', error);
