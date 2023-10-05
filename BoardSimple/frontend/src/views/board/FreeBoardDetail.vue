@@ -15,8 +15,10 @@
         <div class="detail-container">
           <BoardBody :board="board"/>
 
-          <div class="attachment-container" v-if="board.files" v-for="file in board.files">
-            <div class="attachment-box" @click="downloadFile(file)"> {{ file.originName }}</div>
+          <div class="attach-wrapper" v-if="board.files">
+            <div class="attachment-container" v-for="file in board.files" :key="file.seq">
+              <div class="attachment-box" @click="downloadFile(file)"> {{ file.originName }}</div>
+            </div>
           </div>
 
           <ReplyBox :replyList="replyList"
@@ -63,9 +65,9 @@ export default {
      */
     async loadBoard(seq) {
       try {
-        const { board } = await getFreeBoardDetail(seq);
+        const {board} = await getFreeBoardDetail(seq);
         this.board = board;
-      } catch(error) {
+      } catch (error) {
         console.log(error);
       }
     },
@@ -100,7 +102,7 @@ export default {
     // 게시글 삭제
     moveToDelete() {
       deleteFreeBoard(this.seq);
-      this.$router.push({ name: 'FreeBoardList' });
+      this.$router.push({name: 'FreeBoardList'});
     },
     /**
      * 새로운 댓글을 등록합니다.

@@ -56,15 +56,18 @@
                   1번째 이미지는 썸네일로 활용 됩니다.
                 </p>
 
-                <div v-if="galleryBoardDTO.files" v-for="file in galleryBoardDTO.files">
-                  <div class="upload-thumb-wrap">
-                    <!--                    <img :src=getImageUrl(file)>-->
+                <div class="attach-wrapper" v-if="galleryBoardDTO.files">
+                  <div v-for="file in galleryBoardDTO.files" :key="file">
+                    <div class="upload-thumb-wrap">
+<!--                      <img :src=getImageUrl(file)>-->
+                    </div>
+                    <span @click="downloadFile(file)">🗎 {{ file.originName }}</span>
+                    <button type="button" class="btn btn-dark" @click="deleteFile(file.fileName)">삭제</button>
                   </div>
-                  <span @click="downloadFile(file)">🗎 {{ file.originName }}</span>
-                  <button type="button" class="btn btn-dark" @click="deleteFile(file.fileName)">삭제</button>
                 </div>
 
-                <div class="attachInput" v-for="uploadRow in uploadRows">
+
+                <div class="attachInput" v-for="uploadRow in uploadRows" :key="uploadRow">
                   <div class="upload-display">
                     <div class="upload-thumb-wrap" v-if="uploadRow.imageUrl">
                       <img :src=uploadRow.imageUrl>

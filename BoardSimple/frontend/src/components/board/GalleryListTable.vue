@@ -9,6 +9,10 @@
        <p>{{ gallery.content}}</p>
      </div>
    </div>
+
+  <div class="non-data" v-if="galleryList.length === 0">
+    <span>조회된 데이터가 없습니다.</span>
+  </div>
 </template>
 
 <script>
@@ -66,5 +70,12 @@ export default {
   color: #666;
 }
 
+.non-data {
+  text-align: center;
+  margin: 70px 0;
+}
 
+.non-data span {
+  font-size: 1.5rem; /* h4 크기로 조절 */
+}
 </style>

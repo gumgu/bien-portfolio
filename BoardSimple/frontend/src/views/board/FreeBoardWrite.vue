@@ -53,12 +53,14 @@
                   jpg, gif, png, zip 파일만 파일사이즈 2MB 까지 업로드 가능합니다.
                 </p>
 
-                <div v-if="freeBoardDTO.files" v-for="file in freeBoardDTO.files">
-                  <span @click="downloadFile(file)">🗎 {{ file.originName }}</span>
-                  <button type="button" class="btn btn-dark" @click="deleteFile(file.fileName)">삭제</button>
+                <div class="attach-wrapper" v-if="freeBoardDTO.files">
+                  <div v-for="file in freeBoardDTO.files" :key="file">
+                    <span @click="downloadFile(file)">🗎 {{ file.originName }}</span>
+                    <button type="button" class="btn btn-dark" @click="deleteFile(file.fileName)">삭제</button>
+                  </div>
                 </div>
 
-                <div class="attachInput" v-for="uploadRow in uploadRows">
+                <div class="attachInput" v-for="uploadRow in uploadRows" :key="uploadRow">
                   <input type="file" ref="attach" @change="handleFile($event, uploadRow)">
                   <button type="button" class="attachBtn btn btn-outline-dark" @click="removeRow(uploadRow)">x</button>
                 </div>
@@ -80,7 +82,6 @@ import {getFreeBoardDetail, saveFreeBoard, updateFreeBoard} from "@/api/BoardAxi
 import WriteButtons from "@/components/board/WriteButtons.vue";
 import {downloadFile} from "@/api/FileAxios";
 import {required, sizeInclude} from "@/api/BoardValidateAxios";
-import freeBoardDetail from "@/views/board/FreeBoardDetail.vue";
 
 export default {
   name: 'FreeBoardWrite',
