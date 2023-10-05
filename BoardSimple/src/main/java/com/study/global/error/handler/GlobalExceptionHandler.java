@@ -4,10 +4,13 @@ import com.study.global.api.dto.APIResult;
 import com.study.global.api.dto.State;
 import com.study.global.error.dto.ErrorCode;
 import com.study.global.error.dto.ErrorDTO;
+import com.study.global.error.exception.InvalidTokenException;
 import com.study.global.error.exception.LoginFailedException;
 import com.study.global.error.exception.NoSuchBoardSeqException;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,8 +32,7 @@ public class GlobalExceptionHandler {
      * @return ErrorDTO
      */
     @ExceptionHandler(NoSuchBoardSeqException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public APIResult handleNoSuchBoardIdException(NoSuchBoardSeqException ex) {
+    public ResponseEntity<APIResult> handleNoSuchBoardIdException(NoSuchBoardSeqException ex) {
         log.info("handleNoSuchBoardIdException 적용");
 
         ErrorDTO errorDTO = new ErrorDTO(ErrorCode.NO_SUCH_BOARD_ID);
@@ -38,15 +40,14 @@ public class GlobalExceptionHandler {
         APIResult apiResult = new APIResult();
         apiResult.setState(State.FAILURE);
         apiResult.putResult("errorDTO", errorDTO);
-        return apiResult;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResult);
     }
 
     /**
      * 아이디, 비밀번호가 일치하지 않는경우, 로그인 오류 문자를 반환합니다.
      */
     @ExceptionHandler(LoginFailedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public APIResult handleLoginFailedException(LoginFailedException ex) {
+    public ResponseEntity<APIResult> handleLoginFailedException(LoginFailedException ex) {
         log.debug("LoginFailedException 적용");
 
         ErrorDTO errorDTO = new ErrorDTO(ErrorCode.LOGIN_FAILED);
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
         APIResult apiResult = new APIResult();
         apiResult.setState(State.FAILURE);
         apiResult.putResult("errorDTO", errorDTO);
-        return apiResult;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResult);
     }
 
     /**
@@ -64,34 +65,33 @@ public class GlobalExceptionHandler {
      * @param ex InvalidTokenException
      * @return ErrorDTO
      */
-//    @ExceptionHandler({InvalidTokenException.class, ExpiredJwtException.class})
-//    public ResponseEntity handleInvalidTokenException(InvalidTokenException ex) {
-//        log.info("handleInvalidTokenException 적용");
-//
-//        ErrorDTO errorDTO = new ErrorDTO(ErrorCode.INVALID_TOKEN);
-//
-//        APIResult apiResult = new APIResult();
-//        apiResult.setState(State.FAILURE);
-//        apiResult.putResult("errorDTO", errorDTO);
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResult);
-//    }
+    @ExceptionHandler({InvalidTokenException.class, ExpiredJwtException.class})
+    public ResponseEntity handleInvalidTokenException(InvalidTokenException ex) {
+        log.info("handleInvalidTokenException 적용");
+
+        ErrorDTO errorDTO = new ErrorDTO(ErrorCode.INVALID_TOKEN);
+
+        APIResult apiResult = new APIResult();
+        apiResult.setState(State.FAILURE);
+        apiResult.putResult("errorDTO", errorDTO);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResult);
+    }
 
     /**
      * 예상되는 exception 외, 발생할 수 있는 Exception을 대비합니다.
      * @param ex(Exception)
      * @return ErrorDTO
      */
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public APIResult handleAllException(Exception ex) {
-//        log.info("handleAllException 적용");
-//
-//        ErrorDTO errorDTO = new ErrorDTO(ErrorCode.EXCEPTION);
-//
-//        APIResult apiResult = new APIResult();
-//        apiResult.setState(State.FAILURE);
-//        apiResult.putResult("errorDTO", errorDTO);
-//        return apiResult;
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<APIResult> handleAllException(Exception ex) {
+        log.info("handleAllException 적용");
+
+        ErrorDTO errorDTO = new ErrorDTO(ErrorCode.EXCEPTION);
+
+        APIResult apiResult = new APIResult();
+        apiResult.setState(State.FAILURE);
+        apiResult.putResult("errorDTO", errorDTO);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResult);
+    }
 
 }
