@@ -143,7 +143,7 @@ public class GalleryBoardController {
      */
     @PostMapping("/gallery/{seq}")
     public String modify(@Validated(UpdateCheck.class) @ModelAttribute GalleryBoardDTO galleryBoardDTO,
-                         BindingResult bindingResult, HttpServletRequest request) {
+                         BindingResult bindingResult, HttpServletRequest request) throws IOException {
 
         log.info("수정할 gallery = {}", galleryBoardDTO);
 
@@ -164,9 +164,9 @@ public class GalleryBoardController {
 
         galleryBoardDTO.setAdminId(adminDTO.getId());
 
-        galleryBoardService.modifyBoard(galleryBoardDTO);
+        GalleryBoardDTO modifyBoard = galleryBoardService.modifyBoard(galleryBoardDTO);
 
-        return "board/galleryForm";
+        return "redirect:/admin/gallery/" + modifyBoard.getSeq();
     }
 
     /**

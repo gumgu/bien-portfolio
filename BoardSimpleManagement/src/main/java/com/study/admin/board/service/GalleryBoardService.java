@@ -53,7 +53,7 @@ public class GalleryBoardService {
         }
 
         // startRow: 한 페이지에 출력될 가장 첫 게시글의 번호
-        int startRow = (boardSearchCondition.getCurrentPage()-1) * boardSearchCondition.getPageSize();
+        int startRow = (boardSearchCondition.getCurrentPage() - 1) * boardSearchCondition.getPageSize();
         log.info("startRow = {}", startRow);
 
         return galleryBoardRepository.findBoardList(boardSearchCondition, startRow);
@@ -63,6 +63,7 @@ public class GalleryBoardService {
     /**
      * 검색 조건에 맞는 갤러리 게시글 갯수를 조회합니다.
      * - 검색조건이 null인 경우 default값을 설정합니다.
+     *
      * @param boardSearchCondition 검색조건
      * @return 게시글 수
      */
@@ -84,6 +85,7 @@ public class GalleryBoardService {
 
     /**
      * 주어진 seq와 일치하는 갤러리 게시글을 조회하고, 수정 폼을 제공합니다.
+     *
      * @param seq 조회할 게시글 번호
      * @return 조회한 게시글
      */
@@ -102,9 +104,9 @@ public class GalleryBoardService {
 
         galleryBoardRepository.saveBoard(galleryBoardDTO);
 
-        if (!ParamUtil.isNull(galleryBoardDTO.getAddFiles())) {
+        for (MultipartFile file : galleryBoardDTO.getAddFiles()) {
 
-            for(MultipartFile file :  galleryBoardDTO.getAddFiles()) {
+            if (!file.isEmpty()) {
                 log.info("파일 저장 ={}", file);
                 FileDTO fileDTO = FileUtil.uploadFile(file);
                 fileRepository.saveFile(fileDTO, galleryBoardDTO.getSeq());
@@ -117,18 +119,44 @@ public class GalleryBoardService {
 
     /**
      * 갤러리 게시글을 수정합니다.
+     *
      * @param galleryBoardDTO 수정할 갤러리 게시글 정보
      */
-    public void modifyBoard(GalleryBoardDTO galleryBoardDTO) {
+    public GalleryBoardDTO modifyBoard(GalleryBoardDTO galleryBoardDTO) throws IOException {
         galleryBoardRepository.modifyBoard(galleryBoardDTO);
+
+        // 새로운 파일 업로드
+        for (MultipartFile file : galleryBoardDTO.getAddFiles()) {
+
+            if (!file.isEmpty()) {
+                log.info("파일 저장 ={}", file);
+                FileDTO fileDTO = FileUtil.uploadFile(file);
+                fileRepository.saveFile(fileDTO, galleryBoardDTO.getSeq());
+            }
+
+        }
+
+        // 기존 파일 삭제
+        if(!ParamUtil.isNull(galleryBoardDTO.getDeleteFileNames())) {
+            for (String fileName : galleryBoardDTO.getDeleteFileNames()) {
+
+                log.info("삭제할 파일명 = {}", fileName);
+                fileRepository.deleteFileByFileName(fileName);
+                FileUtil.deleteFile(fileName);
+            }
+        }
+
+        return galleryBoardDTO;
     }
 
     /**
      * 주어진 seq의 갤러리 게시글을 삭제합니다.
+     *
      * @param seq 삭제할 seq
      */
     public void deleteBoard(int seq) {
         fileRepository.deleteFileByBoardSeq(seq);
-        galleryBoardRepository.deleteBoard(seq);    }
+        galleryBoardRepository.deleteBoard(seq);
+    }
 
 }

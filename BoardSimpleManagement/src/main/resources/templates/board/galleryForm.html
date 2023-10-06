@@ -35,9 +35,9 @@
             margin: 5px;
         }
 
-        .delete-btn {
-            width: 57px;
-            font-size: 15px;
+        .button-container {
+            text-align: center;
+            margin: 20px;
         }
 
         /* 검증 에러 표현 */
@@ -60,7 +60,7 @@
             <div th:replace="~{fragment/sidebar}"></div>
         </div>
 
-        <div class="col-md-9" >
+        <div class="col-md-9">
 
             <div class="board-name-container">
                 <h3>갤러리 게시판 관리</h3>
@@ -102,8 +102,12 @@
                             <div class="file-container" th:if="${fileList}">
                                 <div class="file-box row" th:each="file : ${fileList}">
                                     <span class="col-md-1">📁</span>
-                                    ︎ <div class="attachment-box col-md-9" th:text="${file.originName}"></div>
-                                    <button type="button" class="delete-btn btn btn-outline-dark col-md-1" th:text="삭제"></button>
+                                    <div class="attachment-box col-md-7" th:text="${file.originName}"></div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" th:value="${file.fileName}" name="deleteFileNames"
+                                               id="deleteFileNames" class="file-checkbox">
+                                        <label for="deleteFileNames">삭제</label>
+                                    </div>
                                 </div>
                             </div>
                             <div id="attachFileDiv">
@@ -115,26 +119,28 @@
                     </tbody>
                 </table>
 
-                <input type="submit"
-                       class="btn btn-primary pull-right"
-                       th:if="${galleryBoardDTO.seq == 0}"
-                       th:onclick="|location.href='@{/admin/gallery}'|"
-                       value="등록">
-                <input type="submit"
-                       class="btn btn-primary pull-right"
-                       th:unless="${galleryBoardDTO.seq == 0}"
-                       th:onclick="|location.href='@{/admin/gallery/{seq}(seq=${galleryBoardDTO.seq})}'|"
-                       value="수정">
-                <button
-                        type="button"
-                        class="btn btn-primary pull-right"
-                        th:onclick="|location.href='@{/admin/galleries}'|">목록
-                </button>
-                <button type="button"
-                        th:if="${galleryBoardDTO.seq != 0}"
-                        th:onclick="|location.href='@{/admin/gallery/delete/{seq}(seq=${galleryBoardDTO.seq})}'|"
-                        class="btn btn-primary pull-right">삭제
-                </button>
+                <div class="button-container">
+                    <input type="submit"
+                           class="btn btn-primary pull-right"
+                           th:if="${galleryBoardDTO.seq == 0}"
+                           th:onclick="|location.href='@{/admin/gallery}'|"
+                           value="등록">
+                    <input type="submit"
+                           class="btn btn-primary pull-right"
+                           th:unless="${galleryBoardDTO.seq == 0}"
+                           th:onclick="|location.href='@{/admin/gallery/{seq}(seq=${galleryBoardDTO.seq})}'|"
+                           value="수정">
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            th:onclick="|location.href='@{/admin/galleries}'|">목록
+                    </button>
+                    <button type="button"
+                            th:if="${galleryBoardDTO.seq != 0}"
+                            th:onclick="|location.href='@{/admin/gallery/delete/{seq}(seq=${galleryBoardDTO.seq})}'|"
+                            class="btn btn-primary pull-right">삭제
+                    </button>
+                </div>
+
             </form>
         </div>
     </div>
