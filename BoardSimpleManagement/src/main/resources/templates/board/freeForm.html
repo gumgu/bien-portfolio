@@ -166,10 +166,11 @@
                             <div class="file-container" th:if="${fileList}">
                                 <div class="file-box row" th:each="file : ${fileList}">
                                     <span class="col-md-1">📁</span>
-                                    ︎
-                                    <div class="attachment-box col-md-9" th:text="${file.originName}"></div>
-                                    <button type="button" class="delete-btn btn btn-outline-dark col-md-1"
-                                            th:text="삭제"></button>
+                                    <div class="attachment-box col-md-7" th:text="${file.originName}"></div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" th:value="${file.fileName}" name="deleteFileNames" id="deleteFileNames" class="file-checkbox">
+                                        <label for="deleteFileNames">삭제</label>
+                                    </div>
                                 </div>
                             </div>
                             <div id="attachFileDiv">

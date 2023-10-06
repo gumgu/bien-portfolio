@@ -132,6 +132,7 @@ public class FreeBoardService {
 
         freeBoardRepository.modifyBoard(freeBoardDTO);
 
+        // 새로운 파일 업로드
         log.info("freeBoardDTO.getAddFiles() = {}", freeBoardDTO.getAddFiles());
 
         for (MultipartFile file : freeBoardDTO.getAddFiles()) {
@@ -142,6 +143,18 @@ public class FreeBoardService {
                 fileRepository.saveFile(fileDTO, freeBoardDTO.getSeq());
             }
 
+        }
+
+        // 기존 파일 삭제
+        log.info("freeBoardDTO.getDeleteFileNames = {}", freeBoardDTO.getDeleteFileNames());
+
+        if(!ParamUtil.isNull(freeBoardDTO.getDeleteFileNames())) {
+            for (String fileName : freeBoardDTO.getDeleteFileNames()) {
+
+                log.info("삭제할 파일명 = {}", fileName);
+                fileRepository.deleteFileByFileName(fileName);
+                FileUtil.deleteFile(fileName);
+            }
         }
 
         return freeBoardDTO;
