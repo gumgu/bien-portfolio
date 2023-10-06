@@ -1,4 +1,4 @@
 package com.study.admin.entity;
 
-public class UpdateCheck {
+public interface UpdateCheck {
 }
