@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.css}"
+          href="css/bootstrap.css" rel="stylesheet">
     <!-- jQuery 라이브러리 로드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script>
@@ -34,6 +34,32 @@
                 });
             }
         }
+
+        function saveReply() {
+            const replyContents = $("#reply-content").val();
+            const replyWriter = $("#reply-writer").val();
+            const boardSeq = $("#board-seq").val();
+            console.log("replyContents : " + replyContents);
+            console.log("replyWriter : " + replyWriter);
+            $.ajax({
+                type: 'POST',
+                url: '/api/reply',
+                data: JSON.stringify({
+                    'adminId': replyWriter,
+                    'content': replyContents,
+                    'boardSeq': boardSeq
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    location.reload();
+                    document.getElementById('reply-content').value = '';
+                },
+                error: function (error) {
+                    alert('댓글 작성에 실패했습니다.');
+                    console.log(error)
+                }
+            })
+        };
 
     </script>
     <style>
@@ -73,7 +99,12 @@
             font-size: 15px;
         }
 
-        /* 검증 에러 표현 */
+        .button-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        /***** 검증 에러 표현 ******/
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
@@ -150,54 +181,59 @@
                     </tbody>
                 </table>
 
-                <div class="reply-container" th:if="${replyList}">
-                    <div class="reply-write-box row">
-                        <input type="text" class="col-md-10" placeholder="댓글을 입력해 주세요">
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-light" id="submitComment">등록</button>
+                <div class="button-container">
+                    <input type="submit"
+                           class="btn btn-primary pull-right"
+                           th:if="${freeBoardDTO.seq == 0}"
+                           th:onclick="|location.href='@{/admin/free}'|"
+                           value="등록">
+                    <input type="submit"
+                           class="btn btn-primary pull-right"
+                           th:unless="${freeBoardDTO.seq == 0}"
+                           th:onclick="|location.href='@{/admin/free/{seq}(seq=${freeBoardDTO.seq})}'|"
+                           value="수정">
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            th:onclick="|location.href='@{/admin/frees}'|">목록
+                    </button>
+                    <button type="button"
+                            th:if="${freeBoardDTO.seq != 0}"
+                            th:onclick="|location.href='@{/admin/free/delete/{seq}(seq=${freeBoardDTO.seq})}'|"
+                            class="btn btn-primary pull-right">삭제
+                    </button>
+                </div>
+
+            </form>
+
+            <div class="reply-container" th:if="${replyList}">
+                <div class="reply-write-box row">
+                    <input type="hidden" id="board-seq" th:value="${freeBoardDTO.seq}">
+                    <input type="hidden" id="reply-writer" th:value="${session['loginAdmin'].id}">
+                    <input type="text" class="col-md-10" id="reply-content" placeholder="댓글을 입력해 주세요">
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-light" th:onclick="|saveReply()|">등록</button>
+                    </div>
+                </div>
+                <div class="reply-content-box row" th:each="reply : ${replyList}">
+                    <div class="col-md-10">
+                        <div class="reply-label">
+                            <span th:if="${reply.memberId}" th:text="${reply.memberId}"></span>
+                            <span th:unless="${reply.memberId}" th:text="${reply.adminId}"></span>
+                            <span th:text="${#temporals.format(reply.date, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                        <div class="reply-content">
+                            <span th:text="${reply.content}"></span>
                         </div>
                     </div>
-                    <div class="reply-content-box row" th:each="reply : ${replyList}">
-                        <div class="col-md-10">
-                            <div class="reply-label">
-                                <span th:if="${reply.memberId}" th:text="${reply.memberId}"></span>
-                                <span th:unless="${reply.adminId}" th:text="${reply.adminId}"></span>
-                                <span th:text="${#temporals.format(reply.date, 'yyyy-MM-dd HH:mm')}"></span>
-                            </div>
-                            <div class="reply-content">
-                                <span th:text="${reply.content}"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-outline-dark"
-                                    th:onclick="|deleteComment(${reply.seq})|">삭제
-                            </button>
-                        </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-dark"
+                                th:onclick="|deleteComment(${reply.seq})|">삭제
+                        </button>
                     </div>
                 </div>
 
-                <input type="submit"
-                       class="btn btn-primary pull-right"
-                       th:if="${freeBoardDTO.seq == 0}"
-                       th:onclick="|location.href='@{/admin/free}'|"
-                       value="등록">
-                <input type="submit"
-                       class="btn btn-primary pull-right"
-                       th:unless="${freeBoardDTO.seq == 0}"
-                       th:onclick="|location.href='@{/admin/free/{seq}(seq=${freeBoardDTO.seq})}'|"
-                       value="수정">
+            </div>
 
-                <button
-                        type="button"
-                        class="btn btn-primary pull-right"
-                        th:onclick="|location.href='@{/admin/frees}'|">목록
-                </button>
-                <button type="button"
-                        th:if="${freeBoardDTO.seq != 0}"
-                        th:onclick="|location.href='@{/admin/free/delete/{seq}(seq=${freeBoardDTO.seq})}'|"
-                        class="btn btn-primary pull-right">삭제
-                </button>
-            </form>
         </div>
     </div>
 </div>
