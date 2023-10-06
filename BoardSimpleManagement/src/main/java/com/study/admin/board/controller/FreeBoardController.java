@@ -151,7 +151,7 @@ public class FreeBoardController {
      */
     @PostMapping("/free/{seq}")
     public String modify(@Validated(UpdateCheck.class) @ModelAttribute FreeBoardDTO freeBoardDTO,
-                         BindingResult bindingResult, HttpServletRequest request) {
+                         BindingResult bindingResult, HttpServletRequest request) throws IOException {
 
         log.info("수정할 free = {}", freeBoardDTO);
 
@@ -173,9 +173,9 @@ public class FreeBoardController {
         log.info("adminDTO = {}", adminDTO);
         freeBoardDTO.setAdminId(adminDTO.getId());
 
-        freeBoardService.modifyBoard(freeBoardDTO);
+        FreeBoardDTO modifyBoard = freeBoardService.modifyBoard(freeBoardDTO);
 
-        return "board/freeForm";
+        return "redirect:/admin/free/" + modifyBoard.getSeq();
     }
 
     /**

@@ -59,7 +59,7 @@ public class FreeBoardService {
         }
 
         // startRow: 한 페이지에 출력될 가장 첫 게시글의 번호
-        int startRow = (boardSearchCondition.getCurrentPage()-1) * boardSearchCondition.getPageSize();
+        int startRow = (boardSearchCondition.getCurrentPage() - 1) * boardSearchCondition.getPageSize();
         log.info("startRow = {}", startRow);
 
         return freeBoardRepository.findBoardList(boardSearchCondition, startRow);
@@ -68,6 +68,7 @@ public class FreeBoardService {
     /**
      * 검색 조건에 맞는 자유 게시글 갯수를 조회합니다.
      * - 검색조건이 null인 경우 default값을 설정합니다.
+     *
      * @param boardSearchCondition 검색조건
      * @return 게시글 수
      */
@@ -88,6 +89,7 @@ public class FreeBoardService {
 
     /**
      * 주어진 seq와 일치하는 자유 게시글을 조회하고, 수정 폼을 제공합니다.
+     *
      * @param seq 조회할 게시글 번호
      * @return 조회한 게시글
      */
@@ -107,9 +109,10 @@ public class FreeBoardService {
         freeBoardRepository.saveBoard(freeBoardDTO);
 
         log.info("freeBoardDTO.getAddFiles() = {}", freeBoardDTO.getAddFiles());
-        if (!ParamUtil.isNull(freeBoardDTO.getAddFiles())) {
 
-            for(MultipartFile file :  freeBoardDTO.getAddFiles()) {
+        for (MultipartFile file : freeBoardDTO.getAddFiles()) {
+
+            if (!file.isEmpty()) {
                 log.info("파일 저장 ={}", file);
                 FileDTO fileDTO = FileUtil.uploadFile(file);
                 fileRepository.saveFile(fileDTO, freeBoardDTO.getSeq());
@@ -122,14 +125,31 @@ public class FreeBoardService {
 
     /**
      * 자유 게시글을 수정합니다.
+     *
      * @param freeBoardDTO 수정할 자유 게시글 정보
      */
-    public void modifyBoard(FreeBoardDTO freeBoardDTO) {
+    public FreeBoardDTO modifyBoard(FreeBoardDTO freeBoardDTO) throws IOException {
+
         freeBoardRepository.modifyBoard(freeBoardDTO);
+
+        log.info("freeBoardDTO.getAddFiles() = {}", freeBoardDTO.getAddFiles());
+
+        for (MultipartFile file : freeBoardDTO.getAddFiles()) {
+
+            if (!file.isEmpty()) {
+                log.info("파일 저장 ={}", file);
+                FileDTO fileDTO = FileUtil.uploadFile(file);
+                fileRepository.saveFile(fileDTO, freeBoardDTO.getSeq());
+            }
+
+        }
+
+        return freeBoardDTO;
     }
 
     /**
      * 주어진 seq의 자유 게시글을 삭제합니다.
+     *
      * @param seq 삭제할 seq
      */
     public void deleteBoard(int seq) {
