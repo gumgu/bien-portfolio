@@ -7,19 +7,41 @@
           href="css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        .board-name-container {
-            margin-bottom: 45px;
+        .container-fluid {
+            max-width: 1000px;
         }
 
         textarea {
             height: 200px;
         }
 
+        /*************** 베너 디자인 *************/
+        .board-name-container {
+            margin: 24px;
+        }
+
+        /************ 작성 폼 내부 디자인 ***********/
+        textarea {
+            height: 200px;
+        }
+
+
+        .button-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        /***** 검증 에러 표현 ******/
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container-fluid">
 
     <div th:replace="~{fragment/header}"></div>
 
@@ -32,16 +54,12 @@
         <div class="col-md-9" style="margin-top: 30px;">
 
             <div class="board-name-container">
-                <h1>문의 게시판</h1>
+                <h3>문의 게시판</h3>
             </div>
 
             <form action th:object="${qnaDTO}" th:action method="post">
                 <table class="table">
                     <tbody>
-                    <div th:if="${#fields.hasGlobalErrors()}">
-                        <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-                           th:text="${err}">글로벌 오류 메시지</p>
-                    </div>
                     <tr>
                         <td class="bg-gray">제목</td>
                         <td><input type="text" name="question_subject" readonly
@@ -67,18 +85,21 @@
                     </tr>
                     </tbody>
                 </table>
-                <input type="submit"
-                       class="btn btn-primary pull-right"
-                       th:onclick="|location.href='@{/admin/qna/{seq}(seq=${qnaDTO.seq})}'|"
-                       value="답변완료">
-                <button type="button"
-                        class="btn btn-primary pull-right"
-                        th:onclick="|location.href='@{/admin/qnas}'|">목록
-                </button>
-                <button type="button"
-                        class="btn btn-primary pull-right"
-                        th:onclick="|location.href='@{/admin/qna/{seq}/delete(seq=${qnaDTO.seq})}'|">삭제
-                </button>
+
+                <div class="button-container">
+                    <input type="submit"
+                           class="btn btn-primary pull-right"
+                           th:onclick="|location.href='@{/admin/qna/{seq}(seq=${qnaDTO.seq})}'|"
+                           value="답변완료">
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            th:onclick="|location.href='@{/admin/qnas}'|">목록
+                    </button>
+                    <button type="button"
+                            class="btn btn-primary pull-right"
+                            th:onclick="|location.href='@{/admin/qna/{seq}/delete(seq=${qnaDTO.seq})}'|">삭제
+                    </button>
+                </div>
             </form>
         </div>
     </div>
