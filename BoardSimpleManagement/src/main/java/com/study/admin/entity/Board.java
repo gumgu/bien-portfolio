@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,7 @@ public class Board {
     /**
      * 게시글 ID: pk, auto_increase
      */
-    @NotBlank(groups = UpdateCheck.class)
+    @NotNull(groups = UpdateCheck.class)
     private int seq;
 
     /**
