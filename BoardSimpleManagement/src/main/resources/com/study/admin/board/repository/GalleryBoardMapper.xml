@@ -92,11 +92,11 @@
             useGeneratedKeys="true"
             keyProperty="seq">
         INSERT INTO board
-        (member_id,
+        (admin_id,
          category_id,
          subject,
          content)
-        VALUES (#{memberId, jdbcType=VARCHAR},
+        VALUES (#{adminId},
                 #{categoryId},
                 #{subject},
                 #{content})

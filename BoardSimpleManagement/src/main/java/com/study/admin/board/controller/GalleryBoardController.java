@@ -126,6 +126,7 @@ public class GalleryBoardController {
         }
 
         galleryBoardDTO.setAdminId(adminDTO.getId());
+        log.info("관리자 아이디 = {}", galleryBoardDTO.getAdminId());
 
         log.debug("galleryBoardDTO={}", galleryBoardDTO.toString());
         GalleryBoardDTO savedGallery = galleryBoardService.saveBoard(galleryBoardDTO);
