@@ -7,6 +7,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 
@@ -21,13 +22,17 @@ import java.util.UUID;
  * 파일 업로드를 위한 Util 입니다.
  */
 @Slf4j
+@Component
 public final class FileUtil {
 
     private FileUtil() {};
 
-    // 경로
-    @Value("${file.dir}")
     private static String fileDir;
+
+    @Value("${file.dir}")
+    public void setFileDir(String fileDir) {
+        this.fileDir = fileDir;
+    }
 
     /**
      * 경로 생성
@@ -36,6 +41,7 @@ public final class FileUtil {
      * @return 경로 + 파일명
      */
     public static String getFullPath(String fileName) {
+        log.info("fileDir = {}", fileDir);
         return fileDir + fileName;
     }
 
@@ -47,6 +53,7 @@ public final class FileUtil {
      * @throws IOException
      */
     public static FileDTO uploadFile(MultipartFile multipartFile) throws IOException {
+
         if(multipartFile.isEmpty()) {
             return null;
         }
